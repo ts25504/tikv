@@ -632,7 +632,10 @@ impl Peer {
         };
         append_timer.observe_duration();
 
-        if !self.is_leader() {
+        // When a peer is applying a snapshot, append response will make leader update
+        // its progress and send all the remaining entries. But we can't handle them
+        // during applying snapshot, so it just waste bandwidth and memory.
+        if !self.is_leader() && apply_result.is_none() {
             self.send(trans, ready.messages.drain(..), &mut metrics.message).unwrap_or_else(|e| {
                 warn!("{} follower send messages err {:?}", self.tag, e);
             })

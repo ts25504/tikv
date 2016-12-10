@@ -392,6 +392,12 @@ impl<T: Transport, C: PdClient> Store<T, C> {
                       p.peer_id());
                 return Ok(false);
             }
+            // When the peer is applying snapshot, all handle ready will be paused, so no responce
+            // will be sent even is generated. It will waste memory.
+            if p.is_applying() {
+                debug!("{} is still applying snapshot, skip all message.", p.tag);
+                return Ok(false);
+            }
         }
         if let Some(p) = stale_peer {
             info!("[region {}] destroying stale peer {:?}", region_id, p);
