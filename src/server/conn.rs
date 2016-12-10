@@ -63,7 +63,7 @@ pub struct Conn {
     send_buffer: PipeBuffer,
     recv_buffer: Option<PipeBuffer>,
 
-    pub buffer_shrink_threshold: usize,
+    buffer_shrink_threshold: usize,
 }
 
 impl Conn {
@@ -247,16 +247,17 @@ impl Conn {
               S: StoreAddrResolver
     {
         try!(self.send_buffer.write_to(&mut self.sock));
+        if self.send_buffer.capacity() > self.buffer_shrink_threshold &&
+           self.send_buffer.len() < self.send_buffer.capacity() / 2 {
+            let old_len = self.send_buffer.len();
+            self.send_buffer.shrink_to(cmp::max(old_len, DEFAULT_SEND_BUFFER_SIZE));
+        }
         if !self.send_buffer.is_empty() {
             // we don't write all data, so must try later.
             // we have already registered writable, no need registering again.
             return Ok(());
         }
 
-        // no data for writing, remove writable
-        if self.send_buffer.capacity() > self.buffer_shrink_threshold {
-            self.send_buffer.shrink_to(DEFAULT_SEND_BUFFER_SIZE);
-        }
         self.interest.remove(EventSet::writable());
         try!(self.reregister(event_loop));
 
