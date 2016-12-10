@@ -42,6 +42,40 @@ const DEFAULT_SEND_BUFFER_SIZE: usize = 8 * 1024;
 const DEFAULT_RECV_BUFFER_SIZE: usize = 8 * 1024;
 const DEFAULT_BUFFER_SHRINK_THRESHOLD: usize = 1024 * 1024;
 
+pub struct ConnDataIter<'a> {
+    conn: &'a mut Conn,
+    msg: Option<ConnData>,
+}
+
+impl<'a> ConnDataIter<'a> {
+    fn new(conn: &'a mut Conn, msg: Option<ConnData>) -> ConnDataIter<'a> {
+        ConnDataIter {
+            conn: conn,
+            msg: msg,
+        }
+    }
+}
+
+impl<'a> Iterator for ConnDataIter<'a> {
+    type Item = Result<ConnData>;
+
+    fn next(&mut self) -> Option<Result<ConnData>> {
+        if self.conn.conn_type == ConnType::Snapshot {
+            return None;
+        }
+
+        if self.msg.is_some() {
+            return Some(Ok(self.msg.take().unwrap()));
+        }
+
+        match self.conn.read_one_message() {
+            Err(e) => Some(Err(e)),
+            Ok(Some(m)) => Some(Ok(m)),
+            Ok(None) => None,
+        }
+    }
+}
+
 pub struct Conn {
     pub sock: TcpStream,
     pub token: Token,
@@ -106,49 +140,43 @@ impl Conn {
 
     pub fn on_readable<T, S>(&mut self,
                              event_loop: &mut EventLoop<Server<T, S>>)
-                             -> Result<Vec<ConnData>>
+                             -> Result<Option<ConnDataIter>>
         where T: RaftStoreRouter,
               S: StoreAddrResolver
     {
-        let mut bufs = vec![];
-        match self.conn_type {
-            ConnType::Handshake => try!(self.handshake(event_loop, &mut bufs)),
-            ConnType::Rpc => try!(self.read_rpc(event_loop, &mut bufs)),
-            ConnType::Snapshot => try!(self.read_snapshot(event_loop)),
-        };
-        Ok(bufs)
-    }
+        if self.conn_type == ConnType::Snapshot {
+            try!(self.read_snapshot(event_loop));
+            return Ok(None);
+        }
 
-    fn handshake<T, S>(&mut self,
-                       event_loop: &mut EventLoop<Server<T, S>>,
-                       bufs: &mut Vec<ConnData>)
-                       -> Result<()>
-        where T: RaftStoreRouter,
-              S: StoreAddrResolver
-    {
+        if self.conn_type == ConnType::Rpc {
+            return Ok(Some(ConnDataIter::new(self, None)));
+        }
+
         let mut data = match try!(self.read_one_message()) {
             Some(data) => data,
-            None => return Ok(()),
+            None => return Ok(None),
         };
-        if data.is_snapshot() {
-            self.conn_type = ConnType::Snapshot;
-
-            let mut snap_data = RaftSnapshotData::new();
-            try!(snap_data.merge_from_bytes(
-                data.msg.get_raft().get_message().get_snapshot().get_data()));
-            self.expect_size = snap_data.get_file_size() as usize;
-            let expect_cap = cmp::min(SNAPSHOT_PAYLOAD_BUF, self.expect_size);
-            // no need to shrink, the connection will be closed soon.
-            self.recv_buffer.as_mut().unwrap().ensure(expect_cap);
-
-            let register_task = SnapTask::Register(self.token, data.msg.take_raft());
-            box_try!(self.snap_scheduler.schedule(register_task));
-
-            return self.read_snapshot(event_loop);
+        if !data.is_snapshot() {
+            self.conn_type = ConnType::Rpc;
+            return Ok(Some(ConnDataIter::new(self, Some(data))));
         }
-        bufs.push(data);
-        self.conn_type = ConnType::Rpc;
-        self.read_rpc(event_loop, bufs)
+
+        self.conn_type = ConnType::Snapshot;
+
+        let mut snap_data = RaftSnapshotData::new();
+        try!(snap_data.merge_from_bytes(
+            data.msg.get_raft().get_message().get_snapshot().get_data()));
+        self.expect_size = snap_data.get_file_size() as usize;
+        let expect_cap = cmp::min(SNAPSHOT_PAYLOAD_BUF, self.expect_size);
+        // no need to shrink, the connection will be closed soon.
+        self.recv_buffer.as_mut().unwrap().ensure(expect_cap);
+
+        let register_task = SnapTask::Register(self.token, data.msg.take_raft());
+        box_try!(self.snap_scheduler.schedule(register_task));
+
+        try!(self.read_snapshot(event_loop));
+        Ok(None)
     }
 
     fn read_snapshot<T, S>(&mut self, _: &mut EventLoop<Server<T, S>>) -> Result<()>
@@ -222,24 +250,6 @@ impl Conn {
             msg_id: msg_id,
             msg: msg,
         }))
-    }
-
-    fn read_rpc<T, S>(&mut self,
-                      _: &mut EventLoop<Server<T, S>>,
-                      bufs: &mut Vec<ConnData>)
-                      -> Result<()>
-        where T: RaftStoreRouter,
-              S: StoreAddrResolver
-    {
-        loop {
-            // Because we use the edge trigger, so here we must read whole data.
-            match try!(self.read_one_message()) {
-                None => break,
-                Some(d) => bufs.push(d),
-            };
-        }
-
-        Ok(())
     }
 
     pub fn on_writable<T, S>(&mut self, event_loop: &mut EventLoop<Server<T, S>>) -> Result<()>

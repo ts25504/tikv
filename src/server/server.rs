@@ -59,6 +59,45 @@ pub fn bind(addr: &str) -> Result<TcpListener> {
     Ok(listener)
 }
 
+fn make_response_cb(ch: SendCh<Msg>, token: Token, msg_id: u64) -> OnResponse {
+    box move |res: Message| {
+        let tp = res.get_msg_type();
+        if let Err(e) = ch.send(Msg::WriteData {
+            token: token,
+            data: ConnData::new(msg_id, res),
+        }) {
+            error!("send {:?} resp failed with token {:?}, msg id {}, err {:?}",
+                   tp,
+                   token,
+                   msg_id,
+                   e);
+        }
+    }
+}
+
+fn on_raft_command<R>(ch: SendCh<Msg>,
+                      router: &R,
+                      msg: RaftCmdRequest,
+                      token: Token,
+                      msg_id: u64)
+                      -> Result<()>
+    where R: RaftStoreRouter + 'static
+{
+    trace!("handle raft command {:?}", msg);
+    let on_resp = make_response_cb(ch, token, msg_id);
+    let cb = box move |resp| {
+        let mut resp_msg = Message::new();
+        resp_msg.set_msg_type(MessageType::CmdResp);
+        resp_msg.set_cmd_resp(resp);
+
+        on_resp.call_box((resp_msg,));
+    };
+
+    try!(router.send_command(msg, cb));
+
+    Ok(())
+}
+
 pub struct Server<T: RaftStoreRouter + 'static, S: StoreAddrResolver> {
     listener: TcpListener,
     // We use HashMap instead of common use mio slab to avoid token reusing.
@@ -217,80 +256,61 @@ impl<T: RaftStoreRouter, S: StoreAddrResolver> Server<T, S> {
     }
 
     fn on_conn_readable(&mut self, event_loop: &mut EventLoop<Self>, token: Token) -> Result<()> {
-        let msgs = try!(match self.conns.get_mut(&token) {
+        let data = match self.conns.get_mut(&token) {
             None => {
                 debug!("missing conn for token {:?}", token);
                 return Ok(());
             }
-            Some(conn) => conn.on_readable(event_loop),
-        });
-
-        if msgs.is_empty() {
-            // Read no message, no need to handle.
-            return Ok(());
-        }
-
-        for msg in msgs {
-            try!(self.on_conn_msg(token, msg))
-        }
-
-        Ok(())
-    }
-
-    fn on_conn_msg(&mut self, token: Token, data: ConnData) -> Result<()> {
-        let msg_id = data.msg_id;
-        let mut msg = data.msg;
-
-        let msg_type = msg.get_msg_type();
-        match msg_type {
-            MessageType::Raft => {
-                RECV_MSG_COUNTER.with_label_values(&["raft"]).inc();
-                try!(self.raft_router.send_raft_msg(msg.take_raft()));
-                Ok(())
+            Some(conn) => {
+                match try!(conn.on_readable(event_loop)) {
+                    None => return Ok(()),
+                    Some(iter) => iter,
+                }
             }
-            MessageType::Cmd => {
-                RECV_MSG_COUNTER.with_label_values(&["cmd"]).inc();
-                self.on_raft_command(msg.take_cmd_req(), token, msg_id)
-            }
-            MessageType::KvReq => {
-                RECV_MSG_COUNTER.with_label_values(&["kv"]).inc();
-                let req = msg.take_kv_req();
-                debug!("notify Request token[{:?}] msg_id[{}] type[{:?}]",
-                       token,
-                       msg_id,
-                       req.get_field_type());
-                let on_resp = self.make_response_cb(token, msg_id);
-                self.store.on_request(req, on_resp)
-            }
-            MessageType::CopReq => {
-                RECV_MSG_COUNTER.with_label_values(&["coprocessor"]).inc();
-                let on_resp = self.make_response_cb(token, msg_id);
-                let req = RequestTask::new(msg.take_cop_req(), on_resp);
-                box_try!(self.end_point_worker.schedule(EndPointTask::Request(req)));
-                Ok(())
-            }
-            _ => {
-                RECV_MSG_COUNTER.with_label_values(&["invalid"]).inc();
-                Err(box_err!("unsupported message {:?} for token {:?} with msg id {}",
-                             msg_type,
-                             token,
-                             msg_id))
-            }
-        }
-    }
-
-    fn on_raft_command(&mut self, msg: RaftCmdRequest, token: Token, msg_id: u64) -> Result<()> {
-        trace!("handle raft command {:?}", msg);
-        let on_resp = self.make_response_cb(token, msg_id);
-        let cb = box move |resp| {
-            let mut resp_msg = Message::new();
-            resp_msg.set_msg_type(MessageType::CmdResp);
-            resp_msg.set_cmd_resp(resp);
-
-            on_resp.call_box((resp_msg,));
         };
 
-        try!(self.raft_router.send_command(msg, cb));
+        for d in data {
+            let ConnData { msg_id, mut msg } = try!(d);
+
+            let msg_type = msg.get_msg_type();
+            match msg_type {
+                MessageType::Raft => {
+                    RECV_MSG_COUNTER.with_label_values(&["raft"]).inc();
+                    try!(self.raft_router.send_raft_msg(msg.take_raft()));
+                }
+                MessageType::Cmd => {
+                    RECV_MSG_COUNTER.with_label_values(&["cmd"]).inc();
+                    try!(on_raft_command(self.sendch.clone(),
+                                         &self.raft_router,
+                                         msg.take_cmd_req(),
+                                         token,
+                                         msg_id));
+                }
+                MessageType::KvReq => {
+                    RECV_MSG_COUNTER.with_label_values(&["kv"]).inc();
+                    let req = msg.take_kv_req();
+                    debug!("notify Request token[{:?}] msg_id[{}] type[{:?}]",
+                           token,
+                           msg_id,
+                           req.get_field_type());
+                    let on_resp = make_response_cb(self.sendch.clone(), token, msg_id);
+                    try!(self.store.on_request(req, on_resp));
+                }
+                MessageType::CopReq => {
+                    RECV_MSG_COUNTER.with_label_values(&["coprocessor"]).inc();
+                    let on_resp = make_response_cb(self.sendch.clone(), token, msg_id);
+                    let req = RequestTask::new(msg.take_cop_req(), on_resp);
+                    box_try!(self.end_point_worker.schedule(EndPointTask::Request(req)));
+                }
+                _ => {
+                    RECV_MSG_COUNTER.with_label_values(&["invalid"]).inc();
+                    return Err(box_err!("unsupported message {:?} for token {:?} with msg id {}",
+                                        msg_type,
+                                        token,
+                                        msg_id));
+                }
+            }
+        }
 
         Ok(())
     }
@@ -521,23 +541,6 @@ impl<T: RaftStoreRouter, S: StoreAddrResolver> Server<T, S> {
             error!("channel is closed, failed to schedule snapshot to {}",
                    sock_addr);
             cb(Err(box_err!("failed to schedule snapshot")));
-        }
-    }
-
-    fn make_response_cb(&mut self, token: Token, msg_id: u64) -> OnResponse {
-        let ch = self.sendch.clone();
-        box move |res: Message| {
-            let tp = res.get_msg_type();
-            if let Err(e) = ch.send(Msg::WriteData {
-                token: token,
-                data: ConnData::new(msg_id, res),
-            }) {
-                error!("send {:?} resp failed with token {:?}, msg id {}, err {:?}",
-                       tp,
-                       token,
-                       msg_id,
-                       e);
-            }
         }
     }
 }
