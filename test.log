@@ -1,0 +1,166 @@
+test_node_after_remove_itself 2017/03/15 18:44:27.581 cluster.rs:156: [DEBUG] starting node 1
+test_node_after_remove_itself 2017/03/15 18:44:27.611 node.rs:238: [INFO] start raft store 1 thread
+test_node_after_remove_itself 2017/03/15 18:44:27.622 peer.rs:245: [INFO] [region 1] create peer with id 1
+test_node_after_remove_itself 2017/03/15 18:44:27.624 peer_storage.rs:251: [DEBUG] creating storage on /tmp/test_cluster.9bKg6QxHyzew for id: 1 start_key: "" end_key: "" region_epoch {conf_ver: 1 version: 1} peers {id: 1 store_id: 1}
+test_node_after_remove_itself 2017/03/15 18:44:27.648 raft.rs:1674: [DEBUG] [region 1] 1 reset election timeout 0 -> 46 at 0
+test_node_after_remove_itself 2017/03/15 18:44:27.649 raft.rs:681: [INFO] [region 1] 1 became follower at term 5
+test_node_after_remove_itself 2017/03/15 18:44:27.649 raft.rs:311: [INFO] [region 1] 1 newRaft [peers: [1], term: 5, commit: 5, applied: 5, last_index: 5, last_term: 5]
+test_node_after_remove_itself 2017/03/15 18:44:27.650 raft.rs:906: [INFO] [region 1] 1 is starting a new election at term 5
+test_node_after_remove_itself 2017/03/15 18:44:27.650 raft.rs:1674: [DEBUG] [region 1] 1 reset election timeout 46 -> 36 at 0
+test_node_after_remove_itself 2017/03/15 18:44:27.650 raft.rs:693: [INFO] [region 1] 1 became candidate at term 6
+test_node_after_remove_itself 2017/03/15 18:44:27.650 raft.rs:779: [INFO] [region 1] 1 received MsgRequestVoteResponse from 1 at term 6
+test_node_after_remove_itself 2017/03/15 18:44:27.650 raft.rs:1674: [DEBUG] [region 1] 1 reset election timeout 36 -> 30 at 0
+test_node_after_remove_itself 2017/03/15 18:44:27.650 raft.rs:727: [INFO] [region 1] 1 became leader at term 6
+test_node_after_remove_itself 2017/03/15 18:44:27.650 store.rs:253: [INFO] [store 1] starts with 1 regions, including 0 tombstones and 0 applying regions, takes Duration { secs: 0, nanos: 30579803 }
+test_node_after_remove_itself 2017/03/15 18:44:27.651 store.rs:281: [INFO] [store 1] cleans up garbage data, takes Duration { secs: 0, nanos: 41725 }
+test_node_after_remove_itself 2017/03/15 18:44:27.651 node.rs:182: [DEBUG] node_id: 1 tmp: Some("/tmp/test_cluster.4UOPcQoMu0bA")
+test_node_after_remove_itself 2017/03/15 18:44:27.651 cluster.rs:159: [DEBUG] node 1 started
+test_node_after_remove_itself 2017/03/15 18:44:27.651 cluster.rs:156: [DEBUG] starting node 3
+test_node_after_remove_itself 2017/03/15 18:44:27.652 mod.rs:193: [INFO] starting working thread: split check worker
+test_node_after_remove_itself 2017/03/15 18:44:27.653 mod.rs:193: [INFO] starting working thread: snapshot worker
+test_node_after_remove_itself 2017/03/15 18:44:27.653 mod.rs:193: [INFO] starting working thread: raft gc worker
+test_node_after_remove_itself 2017/03/15 18:44:27.653 mod.rs:193: [INFO] starting working thread: compact worker
+test_node_after_remove_itself 2017/03/15 18:44:27.653 mod.rs:193: [INFO] starting working thread: pd worker
+test_node_after_remove_itself 2017/03/15 18:44:27.653 mod.rs:193: [INFO] starting working thread: consistency check worker
+test_node_after_remove_itself 2017/03/15 18:44:27.654 mod.rs:193: [INFO] starting working thread: apply worker
+test_node_after_remove_itself 2017/03/15 18:44:27.674 mod.rs:101: [DEBUG] scheduling task heartbeat for region id: 1 start_key: "" end_key: "" region_epoch {conf_ver: 1 version: 1} peers {id: 1 store_id: 1}, leader 1
+test_node_after_remove_itself 2017/03/15 18:44:27.674 peer.rs:635: [DEBUG] [region 1] 1 handle raft ready
+test_node_after_remove_itself 2017/03/15 18:44:27.674 pd.rs:269: [DEBUG] executing task heartbeat for region id: 1 start_key: "" end_key: "" region_epoch {conf_ver: 1 version: 1} peers {id: 1 store_id: 1}, leader 1
+test_node_after_remove_itself 2017/03/15 18:44:27.674 peer.rs:583: [DEBUG] [region 1] 1 becomes leader and lease expired time is Some(Left(Timespec { sec: 722680, nsec: 428256150 }))
+test_node_after_remove_itself 2017/03/15 18:44:27.675 mod.rs:101: [DEBUG] scheduling task heartbeat for region id: 1 start_key: "" end_key: "" region_epoch {conf_ver: 1 version: 1} peers {id: 1 store_id: 1}, leader 1
+test_node_after_remove_itself 2017/03/15 18:44:27.675 peer_storage.rs:533: [DEBUG] [region 1] 1 append 1 entries
+test_node_after_remove_itself 2017/03/15 18:44:27.677 node.rs:238: [INFO] start raft store 3 thread
+test_node_after_remove_itself 2017/03/15 18:44:27.678 store.rs:253: [INFO] [store 3] starts with 0 regions, including 0 tombstones and 0 applying regions, takes Duration { secs: 0, nanos: 91717 }
+test_node_after_remove_itself 2017/03/15 18:44:27.678 mod.rs:101: [DEBUG] scheduling task [region 1] async apply
+test_node_after_remove_itself 2017/03/15 18:44:27.678 store.rs:281: [INFO] [store 3] cleans up garbage data, takes Duration { secs: 0, nanos: 53623 }
+test_node_after_remove_itself 2017/03/15 18:44:27.678 pd.rs:269: [DEBUG] executing task heartbeat for region id: 1 start_key: "" end_key: "" region_epoch {conf_ver: 1 version: 1} peers {id: 1 store_id: 1}, leader 1
+test_node_after_remove_itself 2017/03/15 18:44:27.678 node.rs:182: [DEBUG] node_id: 3 tmp: Some("/tmp/test_cluster.4ncxtiKO4kaI")
+test_node_after_remove_itself 2017/03/15 18:44:27.678 mod.rs:193: [INFO] starting working thread: split check worker
+test_node_after_remove_itself 2017/03/15 18:44:27.678 cluster.rs:159: [DEBUG] node 3 started
+test_node_after_remove_itself 2017/03/15 18:44:27.678 mod.rs:193: [INFO] starting working thread: snapshot worker
+test_node_after_remove_itself 2017/03/15 18:44:27.678 cluster.rs:156: [DEBUG] starting node 2
+test_node_after_remove_itself 2017/03/15 18:44:27.678 mod.rs:193: [INFO] starting working thread: raft gc worker
+test_node_after_remove_itself 2017/03/15 18:44:27.679 mod.rs:193: [INFO] starting working thread: compact worker
+test_node_after_remove_itself 2017/03/15 18:44:27.679 mod.rs:193: [INFO] starting working thread: pd worker
+test_node_after_remove_itself 2017/03/15 18:44:27.679 mod.rs:193: [INFO] starting working thread: consistency check worker
+test_node_after_remove_itself 2017/03/15 18:44:27.679 mod.rs:193: [INFO] starting working thread: apply worker
+test_node_after_remove_itself 2017/03/15 18:44:27.681 store.rs:515: [DEBUG] [region 1] 1 async apply finish: ApplyRes { region_id: 1, apply_state: applied_index: 6 truncated_state {index: 5 term: 5}, applied_index_term: 6, exec_res: [], metrics: ApplyMetrics { size_diff_hint: 0, delete_keys_hint: 0, written_bytes: 0, written_keys: 0, lock_cf_written_bytes: 0 } }
+test_node_after_remove_itself 2017/03/15 18:44:27.697 mod.rs:101: [DEBUG] scheduling task heartbeat for region id: 1 start_key: "" end_key: "" region_epoch {conf_ver: 1 version: 1} peers {id: 1 store_id: 1}, leader 1
+test_node_after_remove_itself 2017/03/15 18:44:27.697 pd.rs:269: [DEBUG] executing task heartbeat for region id: 1 start_key: "" end_key: "" region_epoch {conf_ver: 1 version: 1} peers {id: 1 store_id: 1}, leader 1
+test_node_after_remove_itself 2017/03/15 18:44:27.701 node.rs:238: [INFO] start raft store 2 thread
+test_node_after_remove_itself 2017/03/15 18:44:27.702 store.rs:253: [INFO] [store 2] starts with 0 regions, including 0 tombstones and 0 applying regions, takes Duration { secs: 0, nanos: 32445 }
+test_node_after_remove_itself 2017/03/15 18:44:27.702 store.rs:281: [INFO] [store 2] cleans up garbage data, takes Duration { secs: 0, nanos: 35123 }
+test_node_after_remove_itself 2017/03/15 18:44:27.702 node.rs:182: [DEBUG] node_id: 2 tmp: Some("/tmp/test_cluster.QtN6v44OOUXV")
+test_node_after_remove_itself 2017/03/15 18:44:27.702 mod.rs:193: [INFO] starting working thread: split check worker
+test_node_after_remove_itself 2017/03/15 18:44:27.702 cluster.rs:159: [DEBUG] node 2 started
+test_node_after_remove_itself 2017/03/15 18:44:27.702 mod.rs:193: [INFO] starting working thread: snapshot worker
+test_node_after_remove_itself 2017/03/15 18:44:27.702 mod.rs:193: [INFO] starting working thread: raft gc worker
+test_node_after_remove_itself 2017/03/15 18:44:27.703 mod.rs:193: [INFO] starting working thread: compact worker
+test_node_after_remove_itself 2017/03/15 18:44:27.703 mod.rs:193: [INFO] starting working thread: pd worker
+test_node_after_remove_itself 2017/03/15 18:44:27.703 mod.rs:193: [INFO] starting working thread: consistency check worker
+test_node_after_remove_itself 2017/03/15 18:44:27.703 mod.rs:193: [INFO] starting working thread: apply worker
+test_node_after_remove_itself 2017/03/15 18:44:27.718 mod.rs:101: [DEBUG] scheduling task heartbeat for region id: 1 start_key: "" end_key: "" region_epoch {conf_ver: 1 version: 1} peers {id: 1 store_id: 1}, leader 1
+test_node_after_remove_itself 2017/03/15 18:44:27.719 pd.rs:269: [DEBUG] executing task heartbeat for region id: 1 start_key: "" end_key: "" region_epoch {conf_ver: 1 version: 1} peers {id: 1 store_id: 1}, leader 1
+test_node_after_remove_itself 2017/03/15 18:44:27.719 pd.rs:158: [INFO] [region 1] try to change peer AddNode id: 2 store_id: 2 for region id: 1 start_key: "" end_key: "" region_epoch {conf_ver: 1 version: 1} peers {id: 1 store_id: 1}
+test_node_after_remove_itself 2017/03/15 18:44:27.723 peer.rs:915: [DEBUG] [region 1] 1 propose command with uuid Uuid("532f1127-0699-4e10-938b-7141c1b73c88")
+test_node_after_remove_itself 2017/03/15 18:44:27.724 peer.rs:1272: [INFO] [region 1] 1 propose conf change AddNode peer 2
+test_node_after_remove_itself 2017/03/15 18:44:27.724 mod.rs:101: [DEBUG] scheduling task [region 1] propose
+test_node_after_remove_itself 2017/03/15 18:44:27.725 peer.rs:635: [DEBUG] [region 1] 1 handle raft ready
+test_node_after_remove_itself 2017/03/15 18:44:27.725 peer_storage.rs:533: [DEBUG] [region 1] 1 append 1 entries
+test_node_after_remove_itself 2017/03/15 18:44:27.725 mod.rs:101: [DEBUG] scheduling task [region 1] async apply
+test_node_after_remove_itself 2017/03/15 18:44:27.725 apply.rs:498: [INFO] [region 1] 1 execute admin command cmd_type: ChangePeer change_peer {change_type: AddNode peer {id: 2 store_id: 2}} at [term: 6, index: 7]
+test_node_after_remove_itself 2017/03/15 18:44:27.733 apply.rs:530: [INFO] [region 1] 1 exec ConfChange "AddNode", epoch: conf_ver: 1 version: 1
+test_node_after_remove_itself 2017/03/15 18:44:27.733 apply.rs:561: [INFO] [region 1] 1 add peer id: 2 store_id: 2 to region id: 1 start_key: "" end_key: "" region_epoch {conf_ver: 1 version: 1} peers {id: 1 store_id: 1}
+test_node_after_remove_itself 2017/03/15 18:44:27.733 apply.rs:328: [DEBUG] [region 1] 1 applied command with uuid Uuid("532f1127-0699-4e10-938b-7141c1b73c88") at log index 7
+test_node_after_remove_itself 2017/03/15 18:44:27.735 store.rs:515: [DEBUG] [region 1] 1 async apply finish: ApplyRes { region_id: 1, apply_state: applied_index: 7 truncated_state {index: 5 term: 5}, applied_index_term: 6, exec_res: [ChangePeer(ChangePeer { conf_change: change_type: AddNode node_id: 2 context: "\n \010\001\022\004\010\001\020\001\"\020S/\021'\006\231N\020\223\213qA\301\267<\210*\004\010\001\020\001\032\014\010\001\022\010\010\000\022\004\010\002\020\002", peer: id: 2 store_id: 2, region: id: 1 start_key: "" end_key: "" region_epoch {conf_ver: 2 version: 1} peers {id: 1 store_id: 1} peers {id: 2 store_id: 2} })], metrics: ApplyMetrics { size_diff_hint: 0, delete_keys_hint: 0, written_bytes: 77, written_keys: 2, lock_cf_written_bytes: 0 } }
+test_node_after_remove_itself 2017/03/15 18:44:27.736 store.rs:976: [INFO] [region 1] 1 notify pd with change peer region id: 1 start_key: "" end_key: "" region_epoch {conf_ver: 2 version: 1} peers {id: 1 store_id: 1} peers {id: 2 store_id: 2}
+test_node_after_remove_itself 2017/03/15 18:44:27.736 mod.rs:101: [DEBUG] scheduling task heartbeat for region id: 1 start_key: "" end_key: "" region_epoch {conf_ver: 2 version: 1} peers {id: 1 store_id: 1} peers {id: 2 store_id: 2}, leader 1
+test_node_after_remove_itself 2017/03/15 18:44:27.736 pd.rs:269: [DEBUG] executing task heartbeat for region id: 1 start_key: "" end_key: "" region_epoch {conf_ver: 2 version: 1} peers {id: 1 store_id: 1} peers {id: 2 store_id: 2}, leader 1
+test_node_after_remove_itself 2017/03/15 18:44:27.737 peer.rs:635: [DEBUG] [region 1] 1 handle raft ready
+test_node_after_remove_itself 2017/03/15 18:44:27.738 peer.rs:1405: [DEBUG] [region 1] 1 send raft msg MsgHeartbeat[size: 10] from 1 to 2
+test_node_after_remove_itself 2017/03/15 18:44:27.738 store.rs:655: [DEBUG] [region 1] handle raft message MsgHeartbeat, from 1 to 2
+test_node_after_remove_itself 2017/03/15 18:44:27.739 peer.rs:256: [INFO] [region 1] replicate peer with id 2
+test_node_after_remove_itself 2017/03/15 18:44:27.739 peer_storage.rs:251: [DEBUG] creating storage on /tmp/test_cluster.Am7FWqmCdKgQ for id: 1
+test_node_after_remove_itself 2017/03/15 18:44:27.739 raft.rs:1674: [DEBUG] [region 1] 2 reset election timeout 0 -> 38 at 0
+test_node_after_remove_itself 2017/03/15 18:44:27.739 raft.rs:681: [INFO] [region 1] 2 became follower at term 0
+test_node_after_remove_itself 2017/03/15 18:44:27.739 raft.rs:311: [INFO] [region 1] 2 newRaft [peers: [], term: 0, commit: 0, applied: 0, last_index: 0, last_term: 0]
+test_node_after_remove_itself 2017/03/15 18:44:27.740 raft.rs:1674: [DEBUG] [region 1] 2 reset election timeout 38 -> 33 at 0
+test_node_after_remove_itself 2017/03/15 18:44:27.740 raft.rs:681: [INFO] [region 1] 2 became follower at term 1
+test_node_after_remove_itself 2017/03/15 18:44:27.740 raft.rs:843: [INFO] [region 1] 2 [term: 1] received a MsgHeartbeat message with higher term from 1 [term: 6]
+test_node_after_remove_itself 2017/03/15 18:44:27.740 mod.rs:101: [DEBUG] scheduling task heartbeat for region id: 1 start_key: "" end_key: "" region_epoch {conf_ver: 2 version: 1} peers {id: 1 store_id: 1} peers {id: 2 store_id: 2}, leader 1
+test_node_after_remove_itself 2017/03/15 18:44:27.740 pd.rs:269: [DEBUG] executing task heartbeat for region id: 1 start_key: "" end_key: "" region_epoch {conf_ver: 2 version: 1} peers {id: 1 store_id: 1} peers {id: 2 store_id: 2}, leader 1
+test_node_after_remove_itself 2017/03/15 18:44:27.740 raft.rs:1674: [DEBUG] [region 1] 2 reset election timeout 33 -> 30 at 0
+test_node_after_remove_itself 2017/03/15 18:44:27.741 raft.rs:681: [INFO] [region 1] 2 became follower at term 6
+test_node_after_remove_itself 2017/03/15 18:44:27.741 peer.rs:635: [DEBUG] [region 1] 2 handle raft ready
+test_node_after_remove_itself 2017/03/15 18:44:27.741 peer.rs:1405: [DEBUG] [region 1] 2 send raft msg MsgHeartbeatResponse[size: 10] from 2 to 1
+test_node_after_remove_itself 2017/03/15 18:44:27.741 store.rs:655: [DEBUG] [region 1] handle raft message MsgHeartbeatResponse, from 2 to 1
+test_node_after_remove_itself 2017/03/15 18:44:27.741 peer.rs:635: [DEBUG] [region 1] 1 handle raft ready
+test_node_after_remove_itself 2017/03/15 18:44:27.741 peer.rs:1405: [DEBUG] [region 1] 1 send raft msg MsgAppend[size: 14] from 1 to 2
+test_node_after_remove_itself 2017/03/15 18:44:27.742 store.rs:655: [DEBUG] [region 1] handle raft message MsgAppend, from 1 to 2
+test_node_after_remove_itself 2017/03/15 18:44:27.742 raft.rs:1493: [DEBUG] [region 1] 2 [logterm: 0, index: 7] rejected msgApp [logterm: 6, index: 7] from 1
+test_node_after_remove_itself 2017/03/15 18:44:27.742 peer.rs:635: [DEBUG] [region 1] 2 handle raft ready
+test_node_after_remove_itself 2017/03/15 18:44:27.742 peer.rs:1405: [DEBUG] [region 1] 2 send raft msg MsgAppendResponse[size: 14] from 2 to 1
+test_node_after_remove_itself 2017/03/15 18:44:27.742 store.rs:655: [DEBUG] [region 1] handle raft message MsgAppendResponse, from 2 to 1
+test_node_after_remove_itself 2017/03/15 18:44:27.742 raft.rs:991: [DEBUG] [region 1] 1 received msgAppend rejection(lastindex: 0) from 2 for index 7
+test_node_after_remove_itself 2017/03/15 18:44:27.742 raft.rs:997: [DEBUG] [region 1] 1 decreased progress of 2 to [Progress { matched: 0, next_idx: 1, state: Probe, paused: false, pending_snapshot: 0, recent_active: true, ins: Inflights { start: 0, count: 0, buffer: [] } }]
+test_node_after_remove_itself 2017/03/15 18:44:27.742 peer_storage.rs:507: [INFO] [region 1] 1 requesting snapshot...
+test_node_after_remove_itself 2017/03/15 18:44:27.742 mod.rs:101: [DEBUG] scheduling task Snap gen for 1
+test_node_after_remove_itself 2017/03/15 18:44:27.743 raft.rs:439: [DEBUG] [region 1] 1 failed to send snapshot to 2 because snapshot is termporarily unavailable
+test_node_after_remove_itself 2017/03/15 18:44:27.743 peer_storage.rs:845: [DEBUG] [region 1] begin to generate a snapshot
+test_node_after_remove_itself 2017/03/15 18:44:27.743 snap.rs:1795: [DEBUG] register [key: 1_6_7, entry: Generating]
+test_node_after_remove_itself 2017/03/15 18:44:27.745 mod.rs:101: [DEBUG] scheduling task store heartbeat stats: store_id: 1 capacity: 249795969024 available: 4795928576 region_count: 1 sending_snap_count: 1 receiving_snap_count: 0 start_time: 1489574667 applying_snap_count: 0 is_busy: false
+test_node_after_remove_itself 2017/03/15 18:44:27.745 snap.rs:1177: [INFO] [region 1] scan snapshot, size 1, key count 0, takes Duration { secs: 0, nanos: 1112890 }
+test_node_after_remove_itself 2017/03/15 18:44:27.752 pd.rs:269: [DEBUG] executing task store heartbeat stats: store_id: 1 capacity: 249795969024 available: 4795928576 region_count: 1 sending_snap_count: 1 receiving_snap_count: 0 start_time: 1489574667 applying_snap_count: 0 is_busy: false
+test_node_after_remove_itself 2017/03/15 18:44:27.752 snap.rs:1002: [DEBUG] deleting /tmp/test_cluster.4UOPcQoMu0bA/gen_1_6_7_(default|lock|write).sst
+test_node_after_remove_itself 2017/03/15 18:44:27.753 snap.rs:1813: [DEBUG] deregister [key: 1_6_7, entry: Generating]
+test_node_after_remove_itself 2017/03/15 18:44:27.753 mod.rs:101: [DEBUG] scheduling task store heartbeat stats: store_id: 1 capacity: 249795969024 available: 4795928576 region_count: 1 sending_snap_count: 0 receiving_snap_count: 0 start_time: 1489574667 applying_snap_count: 0 is_busy: false
+test_node_after_remove_itself 2017/03/15 18:44:27.753 pd.rs:269: [DEBUG] executing task store heartbeat stats: store_id: 1 capacity: 249795969024 available: 4795928576 region_count: 1 sending_snap_count: 0 receiving_snap_count: 0 start_time: 1489574667 applying_snap_count: 0 is_busy: false
+test_node_after_remove_itself 2017/03/15 18:44:27.761 mod.rs:101: [DEBUG] scheduling task heartbeat for region id: 1 start_key: "" end_key: "" region_epoch {conf_ver: 2 version: 1} peers {id: 1 store_id: 1} peers {id: 2 store_id: 2}, leader 1
+test_node_after_remove_itself 2017/03/15 18:44:27.761 pd.rs:269: [DEBUG] executing task heartbeat for region id: 1 start_key: "" end_key: "" region_epoch {conf_ver: 2 version: 1} peers {id: 1 store_id: 1} peers {id: 2 store_id: 2}, leader 1
+test_node_after_remove_itself 2017/03/15 18:44:27.761 pd.rs:158: [INFO] [region 1] try to change peer AddNode id: 3 store_id: 3 for region id: 1 start_key: "" end_key: "" region_epoch {conf_ver: 2 version: 1} peers {id: 1 store_id: 1} peers {id: 2 store_id: 2}
+test_node_after_remove_itself 2017/03/15 18:44:27.762 peer.rs:915: [DEBUG] [region 1] 1 propose command with uuid Uuid("bf22fc49-a002-467a-af44-be8c65585a8a")
+test_node_after_remove_itself 2017/03/15 18:44:27.762 peer.rs:1088: [INFO] [region 1] 1 rejects unsafe conf change request change_type: AddNode peer {id: 3 store_id: 3}, total 2, healthy 1,  quorum after change 2
+test_node_after_remove_itself 2017/03/15 18:44:27.763 peer.rs:635: [DEBUG] [region 1] 1 handle raft ready
+test_node_after_remove_itself 2017/03/15 18:44:27.763 peer.rs:1405: [DEBUG] [region 1] 1 send raft msg MsgHeartbeat[size: 10] from 1 to 2
+test_node_after_remove_itself 2017/03/15 18:44:27.763 store.rs:655: [DEBUG] [region 1] handle raft message MsgHeartbeat, from 1 to 2
+test_node_after_remove_itself 2017/03/15 18:44:27.763 peer.rs:635: [DEBUG] [region 1] 2 handle raft ready
+test_node_after_remove_itself 2017/03/15 18:44:27.763 peer.rs:1405: [DEBUG] [region 1] 2 send raft msg MsgHeartbeatResponse[size: 10] from 2 to 1
+test_node_after_remove_itself 2017/03/15 18:44:27.764 store.rs:655: [DEBUG] [region 1] handle raft message MsgHeartbeatResponse, from 2 to 1
+test_node_after_remove_itself 2017/03/15 18:44:27.764 raft.rs:454: [DEBUG] [region 1] 1 [firstindex: 6, commit: 7] sent snapshot[index: 7, term: 6] to 2 [Progress { matched: 0, next_idx: 1, state: Probe, paused: false, pending_snapshot: 0, recent_active: true, ins: Inflights { start: 0, count: 0, buffer: [] } }]
+test_node_after_remove_itself 2017/03/15 18:44:27.764 raft.rs:464: [DEBUG] [region 1] 1 paused sending replication messages to 2 [Progress { matched: 0, next_idx: 1, state: Snapshot, paused: false, pending_snapshot: 7, recent_active: true, ins: Inflights { start: 0, count: 0, buffer: [] } }]
+test_node_after_remove_itself 2017/03/15 18:44:27.764 peer.rs:635: [DEBUG] [region 1] 1 handle raft ready
+test_node_after_remove_itself 2017/03/15 18:44:27.764 peer.rs:1405: [DEBUG] [region 1] 1 send raft msg MsgSnapshot[size: 100] from 1 to 2
+test_node_after_remove_itself 2017/03/15 18:44:27.765 snap.rs:1795: [DEBUG] register [key: 1_6_7, entry: Sending]
+test_node_after_remove_itself 2017/03/15 18:44:30.746 store.rs:488: [INFO] [region 1] 2 detects leader missing for a long time. To check with pd whether it's still valid
+test_node_after_remove_itself 2017/03/15 18:44:30.746 mod.rs:101: [DEBUG] scheduling task validate peer id: 2 store_id: 2 with region id: 1
+test_node_after_remove_itself 2017/03/15 18:44:30.746 pd.rs:269: [DEBUG] executing task validate peer id: 2 store_id: 2 with region id: 1
+test_node_after_remove_itself 2017/03/15 18:44:30.746 pd.rs:252: [INFO] [region 1] 2 is still valid in region id: 1 start_key: "" end_key: "" region_epoch {conf_ver: 2 version: 1} peers {id: 1 store_id: 1} peers {id: 2 store_id: 2}
+test_node_after_remove_itself 2017/03/15 18:44:33.510 cluster.rs:397: [DEBUG] about to shutdown cluster
+test_node_after_remove_itself 2017/03/15 18:44:33.510 cluster.rs:163: [DEBUG] stopping node 2
+test_node_after_remove_itself 2017/03/15 18:44:33.510 node.rs:275: [INFO] stop raft store 2 thread
+test_node_after_remove_itself 2017/03/15 18:44:33.510 store.rs:1959: [INFO] [store 2] receive quit message
+test_node_after_remove_itself 2017/03/15 18:44:33.510 store.rs:420: [INFO] start to stop raftstore.
+test_node_after_remove_itself 2017/03/15 18:44:33.510 mod.rs:232: [INFO] stoping split check worker
+test_node_after_remove_itself 2017/03/15 18:44:33.511 mod.rs:232: [INFO] stoping snapshot worker
+test_node_after_remove_itself 2017/03/15 18:44:33.511 mod.rs:232: [INFO] stoping raft gc worker
+test_node_after_remove_itself 2017/03/15 18:44:33.511 mod.rs:232: [INFO] stoping compact worker
+test_node_after_remove_itself 2017/03/15 18:44:33.511 mod.rs:232: [INFO] stoping pd worker
+test_node_after_remove_itself 2017/03/15 18:44:33.511 mod.rs:232: [INFO] stoping consistency check worker
+test_node_after_remove_itself 2017/03/15 18:44:33.511 mod.rs:232: [INFO] stoping apply worker
+test_node_after_remove_itself 2017/03/15 18:44:33.511 store.rs:443: [INFO] stop raftstore finished.
+test_node_after_remove_itself 2017/03/15 18:44:33.512 cluster.rs:165: [DEBUG] node 2 stopped
+test_node_after_remove_itself 2017/03/15 18:44:33.512 cluster.rs:163: [DEBUG] stopping node 3
+test_node_after_remove_itself 2017/03/15 18:44:33.512 node.rs:275: [INFO] stop raft store 3 thread
+test_node_after_remove_itself 2017/03/15 18:44:33.512 store.rs:1959: [INFO] [store 3] receive quit message
+test_node_after_remove_itself 2017/03/15 18:44:33.512 store.rs:420: [INFO] start to stop raftstore.
+test_node_after_remove_itself 2017/03/15 18:44:33.512 mod.rs:232: [INFO] stoping split check worker
+test_node_after_remove_itself 2017/03/15 18:44:33.512 mod.rs:232: [INFO] stoping snapshot worker
+test_node_after_remove_itself 2017/03/15 18:44:33.512 mod.rs:232: [INFO] stoping raft gc worker
+test_node_after_remove_itself 2017/03/15 18:44:33.512 mod.rs:232: [INFO] stoping compact worker
+test_node_after_remove_itself 2017/03/15 18:44:33.512 mod.rs:232: [INFO] stoping pd worker
+test_node_after_remove_itself 2017/03/15 18:44:33.512 mod.rs:232: [INFO] stoping consistency check worker
+test_node_after_remove_itself 2017/03/15 18:44:33.512 mod.rs:232: [INFO] stoping apply worker
+test_node_after_remove_itself 2017/03/15 18:44:33.513 store.rs:443: [INFO] stop raftstore finished.
+test_node_after_remove_itself 2017/03/15 18:44:33.513 cluster.rs:165: [DEBUG] node 3 stopped
+test_node_after_remove_itself 2017/03/15 18:44:33.513 cluster.rs:163: [DEBUG] stopping node 1
+test_node_after_remove_itself 2017/03/15 18:44:33.513 node.rs:275: [INFO] stop raft store 1 thread
